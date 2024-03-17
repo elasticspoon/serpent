@@ -435,7 +435,14 @@ func (inv *Invocation) run(state *runState) error {
 		if inv.Command.HelpHandler == nil {
 			return defaultHelpFn()(inv)
 		}
-		return inv.Command.HelpHandler(inv)
+		if err := inv.Command.HelpHandler(inv); err != nil {
+			return &RunCommandError{
+				Cmd: inv.Command,
+				Err: err,
+			}
+		}
+
+		return nil
 	}
 
 	err = mw(inv.Command.Handler)(inv)

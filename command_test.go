@@ -168,6 +168,17 @@ func TestCommand(t *testing.T) {
 		require.Contains(t, io.Stderr.String(), "unknown subcommand")
 	})
 
+	t.Run("NoSubcommandWithHelp", func(t *testing.T) {
+		t.Parallel()
+		i := cmd().Invoke(
+			"na", "--help",
+		)
+		io := fakeIO(i)
+		err := i.Run()
+		require.Error(t, err)
+		require.Contains(t, io.Stderr.String(), "unknown subcommand")
+	})
+
 	t.Run("UnknownFlags", func(t *testing.T) {
 		t.Parallel()
 		i := cmd().Invoke(
